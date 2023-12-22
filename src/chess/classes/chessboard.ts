@@ -42,11 +42,23 @@ export class Chessboard<T extends BasePiece> {
     pieces.set(index, piece);
   }
 
-  public executeMove(move: Move): Chessboard<T> {
+  public executeMove(move: Move): void {
     const { end } = move;
     this.clearCell(end);
     this.movePiece(move);
-    return this.clone();
+  }
+
+  public clearCell(position: Position): void {
+    const piece = this.at(position);
+    if (!piece) {
+      return;
+    }
+    const { color } = piece;
+    const index = this.superIndex(position);
+    const pieces = this.getPieces(color);
+    const captured = this.getCapturedPieces(color);
+    captured.push(piece);
+    pieces.delete(index);
   }
 
   public getPieces(color: Color): Map<number, T> {
@@ -75,19 +87,6 @@ export class Chessboard<T extends BasePiece> {
 
   private cloneArray(arr: T[]): T[] {
     return arr.map((piece) => piece.clone() as T);
-  }
-
-  private clearCell(position: Position): void {
-    const piece = this.at(position);
-    if (!piece) {
-      return;
-    }
-    const { color } = piece;
-    const index = this.superIndex(position);
-    const pieces = this.getPieces(color);
-    const captured = this.getCapturedPieces(color);
-    captured.push(piece);
-    pieces.delete(index);
   }
 
   private movePiece({ end, start }: Move): void {

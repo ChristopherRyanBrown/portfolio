@@ -106,8 +106,14 @@ export class GameState {
   }
 
   executeMove(move: Move): GameState {
+    this.board.executeMove(move);
+    const { end, specialtyMoveType } = move;
+    const piece = this.board.at(end);
+    if (specialtyMoveType) {
+      piece?.specialtyMove?.(move, this.board);
+    }
     return new GameState(
-      this.board.executeMove(move),
+      this.board.clone(),
       this.color === Color.BLACK ? Color.WHITE : Color.BLACK,
     );
   }

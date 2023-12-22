@@ -15,9 +15,7 @@ export function ChessGame() {
       return [];
     }
     const piece = board.at(selectedCell);
-    return (
-      piece?.getAvailableMoves(selectedCell, board).map(({ end }) => end) ?? []
-    );
+    return piece?.getAvailableMoves(selectedCell, board) ?? [];
   }, [board, selectedCell]);
 
   const grid = useMemo(
@@ -26,7 +24,7 @@ export function ChessGame() {
         new Array(8).fill(null).map((_, column) => {
           const piece = board.at({ column, row });
           const isAvailableForMove = !!availableMoves.find(
-            (position) => position.row === row && position.column === column,
+            ({ end }) => end.row === row && end.column === column,
           );
           const isSelected =
             selectedCell?.column === column && selectedCell?.row === row;
@@ -59,10 +57,11 @@ export function ChessGame() {
                 onClick={() =>
                   isAvailableForMove &&
                   setChessGame(
-                    executeMove({
-                      end: { column: j, row: i },
-                      start: selectedCell!,
-                    }),
+                    executeMove(
+                      availableMoves.find(
+                        ({ end }) => end.column === j && end.row == i,
+                      )!,
+                    ),
                   )
                 }
                 sx={

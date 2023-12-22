@@ -5,6 +5,8 @@ import { PieceType } from "../../enums/piece-type";
 import { Piece } from "../piece";
 import { Move } from "../../types/move";
 import { Position } from "../../types/position";
+import { Queen } from "./queen";
+import { SpecialtyMove } from "../../enums/specialty-move";
 
 export class Pawn extends BasePiece implements Piece {
   constructor(color: Color, hasMoved: boolean) {
@@ -42,10 +44,29 @@ export class Pawn extends BasePiece implements Piece {
     }
     return endPositions
       .filter((position) => chessboard.isPositionValid(position))
-      .map((end: Position): Move => ({ end, start: position }));
+      .map(
+        (end: Position): Move => ({
+          end,
+          specialtyMoveType:
+            end.row === 0 || end.row === 7 ? SpecialtyMove.QUEEN : undefined,
+          start: position,
+        }),
+      );
   }
 
   public clone<T extends BasePiece>(): T {
     return new Pawn(this.color, this.hasMoved) as unknown as T;
+  }
+
+  public specialtyMove(move: Move, chessboard: Chessboard<Piece>): void {
+    const { specialtyMoveType } = move;
+    if (specialtyMoveType === SpecialtyMove.QUEEN) {
+      this.queen(move, chessboard);
+    }
+  }
+
+  private queen({ end }: Move, chessboard: Chessboard<Piece>): void {
+    chessboard.clearCell(end);
+    chessboard.addPiece(new Queen(this.color, this.hasMoved), end);
   }
 }
