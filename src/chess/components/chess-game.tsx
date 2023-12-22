@@ -76,7 +76,10 @@ export function ChessGame() {
               >
                 {piece && (
                   <Box
+                    alignItems="center"
+                    display="flex"
                     height="100%"
+                    justifyContent="center"
                     width="100%"
                     onClick={(evt) => {
                       if (!selectedCell) {
