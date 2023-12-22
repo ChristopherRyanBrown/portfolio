@@ -63,6 +63,10 @@ export class Chessboard<T extends BasePiece> {
     return { column, row };
   }
 
+  public isPositionValid({ column, row }: Position): boolean {
+    return row >= 0 && row < 8 && column >= 0 && column < 8;
+  }
+
   private cloneMap(map: Map<number, T>): Map<number, T> {
     return new Map(
       [...map.entries()].map(([key, value]) => [key, value.clone() as T]),
