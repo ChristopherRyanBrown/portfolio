@@ -3,7 +3,7 @@ import { Color } from "../enums/color";
 import { Pawn } from "./pieces/pawn";
 import { Piece } from "./piece";
 import { Move } from "../types/move";
-import { Bishop } from "./pieces/bishop";
+import { Queen } from "./pieces/queen";
 
 export class GameState {
   board: Chessboard<Piece>;
@@ -17,7 +17,7 @@ export class GameState {
         column: 4,
         row: 3,
       });
-      initialBoard.addPiece(new Bishop(Color.WHITE, false), {
+      initialBoard.addPiece(new Queen(Color.WHITE, false), {
         column: 3,
         row: 5,
       });
