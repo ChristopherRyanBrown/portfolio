@@ -1,8 +1,9 @@
 import { Chessboard } from "./chessboard";
 import { Color } from "../enums/color";
-import { Pawn } from "./pawn";
+import { Pawn } from "./pieces/pawn";
 import { Piece } from "./piece";
 import { Move } from "../types/move";
+import { Rook } from "./pieces/rook";
 
 export class GameState {
   board: Chessboard<Piece>;
@@ -15,6 +16,10 @@ export class GameState {
       initialBoard.addPiece(new Pawn(Color.WHITE, false), {
         column: 4,
         row: 3,
+      });
+      initialBoard.addPiece(new Rook(Color.WHITE, false), {
+        column: 3,
+        row: 5,
       });
       this.board = initialBoard;
     }

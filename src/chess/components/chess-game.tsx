@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { GameState } from "../classes/game-state";
 import { Position } from "../types/position";
+import { ChessPiece } from "./chess-piece";
 
 export function ChessGame() {
   const [{ board, executeMove }, setChessGame] = useState(
@@ -27,10 +28,12 @@ export function ChessGame() {
           const isAvailableForMove = !!availableMoves.find(
             (position) => position.row === row && position.column === column,
           );
-          return { isAvailableForMove, piece };
+          const isSelected =
+            selectedCell?.column === column && selectedCell?.row === row;
+          return { isAvailableForMove, isSelected, piece };
         }),
       ),
-    [availableMoves, board],
+    [availableMoves, board, selectedCell],
   );
 
   useEffect(() => {
@@ -41,7 +44,7 @@ export function ChessGame() {
     <Box display="flex" flexDirection="column">
       {grid.map((row, i) => (
         <Box display="flex" flexDirection="row" key={i}>
-          {row.map(({ isAvailableForMove, piece }, j) => (
+          {row.map(({ isAvailableForMove, isSelected, piece }, j) => (
             <Box
               key={j}
               color={piece?.color}
@@ -76,15 +79,19 @@ export function ChessGame() {
                     height="100%"
                     width="100%"
                     onClick={(evt) => {
-                      evt.stopPropagation();
+                      if (!selectedCell) {
+                        evt.stopPropagation();
+                      }
                       setSelectedCell({ column: j, row: i });
                     }}
                     sx={{
-                      backgroundColor: selectedCell && "rgba(255, 255, 0, 0.6)",
+                      backgroundColor: isSelected
+                        ? "rgba(255, 255, 0, 0.6)"
+                        : undefined,
                       cursor: "pointer",
                     }}
                   >
-                    P
+                    <ChessPiece piece={piece} />
                   </Box>
                 )}
               </Box>

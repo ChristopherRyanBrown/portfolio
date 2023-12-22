@@ -1,10 +1,10 @@
-import { BasePiece } from "./base-piece";
-import { Chessboard } from "./chessboard";
-import { Color } from "../enums/color";
-import { PieceType } from "../enums/piece-type";
-import { Piece } from "./piece";
-import { Move } from "../types/move";
-import { Position } from "../types/position";
+import { BasePiece } from "../base-piece";
+import { Chessboard } from "../chessboard";
+import { Color } from "../../enums/color";
+import { PieceType } from "../../enums/piece-type";
+import { Piece } from "../piece";
+import { Move } from "../../types/move";
+import { Position } from "../../types/position";
 
 export class Pawn extends BasePiece implements Piece {
   constructor(color: Color, hasMoved: boolean) {
