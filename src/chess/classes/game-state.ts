@@ -5,25 +5,28 @@ import { Piece } from "./piece";
 import { Move } from "../types/move";
 
 export class GameState {
-    board: Chessboard<Piece>;
+  board: Chessboard<Piece>;
 
-    constructor(board?: Chessboard<Piece>) {
-        if (board) {
-            this.board = board;
-        } else {
-            const initialBoard = new Chessboard<Piece>();
-            initialBoard.addPiece(new Pawn(Color.WHITE, false), { column: 4, row: 3 });
-            this.board = initialBoard;
-        }
-
-        this.executeMove = this.executeMove.bind(this);
+  constructor(board?: Chessboard<Piece>) {
+    if (board) {
+      this.board = board;
+    } else {
+      const initialBoard = new Chessboard<Piece>();
+      initialBoard.addPiece(new Pawn(Color.WHITE, false), {
+        column: 4,
+        row: 3,
+      });
+      this.board = initialBoard;
     }
 
-    clone(): GameState {
-        return new GameState(this.board.clone());
-    }
+    this.executeMove = this.executeMove.bind(this);
+  }
 
-    executeMove(move: Move): GameState {
-        return new GameState(this.board.executeMove(move));
-    }
+  clone(): GameState {
+    return new GameState(this.board.clone());
+  }
+
+  executeMove(move: Move): GameState {
+    return new GameState(this.board.executeMove(move));
+  }
 }
