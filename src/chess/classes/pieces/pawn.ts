@@ -19,9 +19,6 @@ export class Pawn extends BasePiece implements Piece {
     const endPositions = new Array<Position>();
     const direction = this.color === Color.BLACK ? 1 : -1;
     const endRow = row + direction;
-    if (endRow < 0 || endRow > 7) {
-      return [];
-    }
     const leftDiag: Position = { column: column - 1, row: endRow };
     const rightDiag: Position = { column: column + 1, row: endRow };
     const middle: Position = { column, row: endRow };
@@ -33,10 +30,19 @@ export class Pawn extends BasePiece implements Piece {
     if (piece && piece.color !== this.color) {
       endPositions.push(rightDiag);
     }
-    endPositions.push(middle);
-    return endPositions.map(
-      (end: Position): Move => ({ end, start: position }),
-    );
+    if (!chessboard.at(middle)) {
+      endPositions.push(middle);
+    }
+    piece = chessboard.at(position);
+    if (!piece?.hasMoved) {
+      const forwardTwo: Position = { column, row: endRow + direction };
+      if (!chessboard.at(forwardTwo)) {
+        endPositions.push(forwardTwo);
+      }
+    }
+    return endPositions
+      .filter((position) => chessboard.isPositionValid(position))
+      .map((end: Position): Move => ({ end, start: position }));
   }
 
   public clone<T extends BasePiece>(): T {

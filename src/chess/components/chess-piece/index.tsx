@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { PieceType } from "../../enums/piece-type";
 import { Props } from "./props";
