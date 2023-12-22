@@ -51,7 +51,7 @@ export function ChessGame() {
               height={80}
               width={80}
               onClick={() => setSelectedCell(undefined)}
-              sx={{ backgroundColor: (i + j) % 2 === 0 ? "red" : "grey" }}
+              sx={{ backgroundColor: (i + j) % 2 === 0 ? "tan" : "brown" }}
             >
               <Box
                 height="100%"
