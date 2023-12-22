@@ -1,8 +1,8 @@
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import { useEffect, useMemo, useState } from "react";
 import { GameState } from "../classes/game-state";
 import { Position } from "../types/position";
-import { ChessPiece } from "./chess-piece";
+import { Cell } from "./cell";
 
 export function ChessGame() {
   const [{ board, color, executeMove }, setChessGame] = useState(
@@ -20,17 +20,11 @@ export function ChessGame() {
 
   const grid = useMemo(
     () =>
-      new Array(8).fill(null).map((_, row) =>
-        new Array(8).fill(null).map((_, column) => {
-          const piece = board.at({ column, row });
-          const isAvailableForMove = !!availableMoves.find(
-            ({ end }) => end.row === row && end.column === column,
-          );
-          const isSelected =
-            selectedCell?.column === column && selectedCell?.row === row;
-          return { isAvailableForMove, isSelected, piece };
-        }),
-      ),
+      new Array(8)
+        .fill(null)
+        .map((_, row) =>
+          new Array(8).fill(null).map((_, column) => board.at({ column, row })),
+        ),
     [availableMoves, board, selectedCell],
   );
 
@@ -40,67 +34,19 @@ export function ChessGame() {
 
   return (
     <Box display="flex" flexDirection="column">
-      {grid.map((row, i) => (
-        <Box display="flex" flexDirection="row" key={i}>
-          {row.map(({ isAvailableForMove, isSelected, piece }, j) => (
-            <Box
-              key={j}
-              color={piece?.color}
-              height={80}
-              width={80}
-              onClick={() => setSelectedCell(undefined)}
-              sx={{ backgroundColor: (i + j) % 2 === 0 ? "tan" : "brown" }}
-            >
-              <Box
-                height="100%"
-                width="100%"
-                onClick={() =>
-                  isAvailableForMove &&
-                  setChessGame(
-                    executeMove(
-                      availableMoves.find(
-                        ({ end }) => end.column === j && end.row == i,
-                      )!,
-                    ),
-                  )
-                }
-                sx={
-                  isAvailableForMove
-                    ? {
-                        backgroundColor: "rgba(255, 255, 0, 0.4)",
-                        cursor: "pointer",
-                      }
-                    : null
-                }
-              >
-                {piece && (
-                  <Box
-                    alignItems="center"
-                    display="flex"
-                    height="100%"
-                    justifyContent="center"
-                    width="100%"
-                    onClick={(evt) => {
-                      if (color !== piece.color) {
-                        return;
-                      }
-                      if (!selectedCell) {
-                        evt.stopPropagation();
-                      }
-                      setSelectedCell({ column: j, row: i });
-                    }}
-                    sx={{
-                      backgroundColor: isSelected
-                        ? "rgba(255, 255, 0, 0.6)"
-                        : undefined,
-                      cursor: "pointer",
-                    }}
-                  >
-                    <ChessPiece piece={piece} />
-                  </Box>
-                )}
-              </Box>
-            </Box>
+      {grid.map((columns, row) => (
+        <Box display="flex" flexDirection="row" key={row}>
+          {columns.map((piece, column) => (
+            <Cell
+              availableMoves={availableMoves}
+              color={(row + column) % 2 === 0 ? "tan" : "brown"}
+              currentPlayer={color}
+              piece={piece}
+              position={{ column, row }}
+              selectedCell={selectedCell}
+              onMove={(move) => setChessGame(executeMove(move))}
+              onSelect={setSelectedCell}
+            />
           ))}
         </Box>
       ))}
