@@ -23,7 +23,7 @@ export class Queen extends BasePiece implements Piece {
     ];
   }
 
-  clone<T extends BasePiece>(): T {
+  public clone<T extends BasePiece>(): T {
     return new Queen(this.color, this.hasMoved) as unknown as T;
   }
 }

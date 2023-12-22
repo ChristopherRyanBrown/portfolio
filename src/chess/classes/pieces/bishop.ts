@@ -19,7 +19,7 @@ export class Bishop extends BasePiece implements Piece {
     return getDiagonalMoves(this.color, position, chessboard);
   }
 
-  clone<T extends BasePiece>(): T {
+  public clone<T extends BasePiece>(): T {
     return new Bishop(this.color, this.hasMoved) as unknown as T;
   }
 }

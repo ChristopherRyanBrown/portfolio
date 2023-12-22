@@ -19,7 +19,7 @@ export class Rook extends BasePiece implements Piece {
     return getHorizontalAndVerticalMoves(this.color, position, chessboard);
   }
 
-  clone<T extends BasePiece>(): T {
+  public clone<T extends BasePiece>(): T {
     return new Rook(this.color, this.hasMoved) as unknown as T;
   }
 }

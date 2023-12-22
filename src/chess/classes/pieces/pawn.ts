@@ -39,7 +39,7 @@ export class Pawn extends BasePiece implements Piece {
     );
   }
 
-  clone<T extends BasePiece>(): T {
+  public clone<T extends BasePiece>(): T {
     return new Pawn(this.color, this.hasMoved) as unknown as T;
   }
 }
