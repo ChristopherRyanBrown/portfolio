@@ -11,10 +11,12 @@ import { King } from "./pieces/king";
 
 export class GameState {
   board: Chessboard<Piece>;
+  color: Color;
 
-  constructor(board?: Chessboard<Piece>) {
-    if (board) {
+  constructor(board?: Chessboard<Piece>, color?: Color) {
+    if (board && color) {
       this.board = board;
+      this.color = color;
     } else {
       const initialBoard = new Chessboard<Piece>();
 
@@ -93,16 +95,20 @@ export class GameState {
         row: 7,
       });
       this.board = initialBoard;
+      this.color = Color.WHITE;
     }
 
     this.executeMove = this.executeMove.bind(this);
   }
 
   clone(): GameState {
-    return new GameState(this.board.clone());
+    return new GameState(this.board.clone(), this.color);
   }
 
   executeMove(move: Move): GameState {
-    return new GameState(this.board.executeMove(move));
+    return new GameState(
+      this.board.executeMove(move),
+      this.color === Color.BLACK ? Color.WHITE : Color.BLACK,
+    );
   }
 }

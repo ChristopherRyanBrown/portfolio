@@ -5,7 +5,7 @@ import { Position } from "../types/position";
 import { ChessPiece } from "./chess-piece";
 
 export function ChessGame() {
-  const [{ board, executeMove }, setChessGame] = useState(
+  const [{ board, color, executeMove }, setChessGame] = useState(
     () => new GameState(),
   );
   const [selectedCell, setSelectedCell] = useState<Position>();
@@ -82,6 +82,9 @@ export function ChessGame() {
                     justifyContent="center"
                     width="100%"
                     onClick={(evt) => {
+                      if (color !== piece.color) {
+                        return;
+                      }
                       if (!selectedCell) {
                         evt.stopPropagation();
                       }
