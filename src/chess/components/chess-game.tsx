@@ -25,7 +25,7 @@ export function ChessGame() {
         .map((_, row) =>
           new Array(8).fill(null).map((_, column) => board.at({ column, row })),
         ),
-    [availableMoves, board, selectedCell],
+    [board],
   );
 
   useEffect(() => {
