@@ -34,7 +34,7 @@ export function ChessPiece({ piece }: Props) {
       case PieceType.ROOK:
         return isBlack ? BlackRook : WhiteRook;
     }
-  }, [type]);
+  }, [color, type]);
 
   return <img src={image} />;
 }

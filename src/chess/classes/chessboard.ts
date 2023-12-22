@@ -100,7 +100,7 @@ export class Chessboard<T extends BasePiece> {
     const endIndex = this.superIndex(end);
     const pieces = this.getPieces(color);
     piece.hasMoved = true;
-    pieces.set(endIndex, piece.clone());
+    pieces.set(endIndex, piece);
     pieces.delete(startIndex);
   }
 
