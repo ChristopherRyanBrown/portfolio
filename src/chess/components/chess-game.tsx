@@ -17,9 +17,7 @@ export function ChessGame() {
     getAllAvailableMoves,
   ]);
 
-  useEffect(() => {
-    console.log({ allAvailableMoves });
-  }, [allAvailableMoves]);
+  const isCheckMate = !allAvailableMoves.length;
 
   const availableMoves = useMemo(() => {
     if (!selectedCell) {
@@ -47,7 +45,8 @@ export function ChessGame() {
 
   return (
     <Box display="flex" flexDirection="column">
-      {isInCheck && "Check"}
+      {isCheckMate && "Checkmate"}
+      {isInCheck && !isCheckMate && "Check"}
       <Box display="flex" flexDirection="column">
         {grid.map((columns, row) => (
           <Box display="flex" flexDirection="row" key={row}>
