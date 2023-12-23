@@ -9,8 +9,8 @@ import { Queen } from "./queen";
 import { SpecialtyMove } from "../../enums/specialty-move";
 
 export class Pawn extends BasePiece implements Piece {
-  constructor(color: Color, hasMoved: boolean) {
-    super(color, PieceType.PAWN, hasMoved);
+  constructor(color: Color, numMoves: number) {
+    super(color, PieceType.PAWN, numMoves);
   }
 
   public getAvailableMoves(
@@ -36,7 +36,7 @@ export class Pawn extends BasePiece implements Piece {
       endPositions.push(middle);
     }
     piece = chessboard.at(position);
-    if (!piece?.hasMoved) {
+    if (!piece?.numMoves) {
       const forwardTwo: Position = { column, row: endRow + direction };
       if (!chessboard.at(forwardTwo)) {
         endPositions.push(forwardTwo);
@@ -55,7 +55,7 @@ export class Pawn extends BasePiece implements Piece {
   }
 
   public clone<T extends BasePiece>(): T {
-    return new Pawn(this.color, this.hasMoved) as unknown as T;
+    return new Pawn(this.color, this.numMoves) as unknown as T;
   }
 
   public specialtyMove(move: Move, chessboard: Chessboard<Piece>): void {
@@ -67,6 +67,6 @@ export class Pawn extends BasePiece implements Piece {
 
   private queen({ end }: Move, chessboard: Chessboard<Piece>): void {
     chessboard.clearCell(end);
-    chessboard.addPiece(new Queen(this.color, this.hasMoved), end);
+    chessboard.addPiece(new Queen(this.color, this.numMoves), end);
   }
 }

@@ -21,76 +21,76 @@ export class GameState {
       const initialBoard = new Chessboard<Piece>();
 
       for (let i = 0; i < 8; i++) {
-        initialBoard.addPiece(new Pawn(Color.BLACK, false), {
+        initialBoard.addPiece(new Pawn(Color.BLACK, 0), {
           column: i,
           row: 1,
         });
-        initialBoard.addPiece(new Pawn(Color.WHITE, false), {
+        initialBoard.addPiece(new Pawn(Color.WHITE, 0), {
           column: i,
           row: 6,
         });
       }
-      initialBoard.addPiece(new Rook(Color.BLACK, false), {
+      initialBoard.addPiece(new Rook(Color.BLACK, 0), {
         column: 0,
         row: 0,
       });
-      initialBoard.addPiece(new Rook(Color.BLACK, false), {
+      initialBoard.addPiece(new Rook(Color.BLACK, 0), {
         column: 7,
         row: 0,
       });
-      initialBoard.addPiece(new Rook(Color.WHITE, false), {
+      initialBoard.addPiece(new Rook(Color.WHITE, 0), {
         column: 0,
         row: 7,
       });
-      initialBoard.addPiece(new Rook(Color.WHITE, false), {
+      initialBoard.addPiece(new Rook(Color.WHITE, 0), {
         column: 7,
         row: 7,
       });
-      initialBoard.addPiece(new Knight(Color.BLACK, false), {
+      initialBoard.addPiece(new Knight(Color.BLACK, 0), {
         column: 1,
         row: 0,
       });
-      initialBoard.addPiece(new Knight(Color.BLACK, false), {
+      initialBoard.addPiece(new Knight(Color.BLACK, 0), {
         column: 6,
         row: 0,
       });
-      initialBoard.addPiece(new Knight(Color.WHITE, false), {
+      initialBoard.addPiece(new Knight(Color.WHITE, 0), {
         column: 1,
         row: 7,
       });
-      initialBoard.addPiece(new Knight(Color.WHITE, false), {
+      initialBoard.addPiece(new Knight(Color.WHITE, 0), {
         column: 6,
         row: 7,
       });
-      initialBoard.addPiece(new Bishop(Color.BLACK, false), {
+      initialBoard.addPiece(new Bishop(Color.BLACK, 0), {
         column: 2,
         row: 0,
       });
-      initialBoard.addPiece(new Bishop(Color.BLACK, false), {
+      initialBoard.addPiece(new Bishop(Color.BLACK, 0), {
         column: 5,
         row: 0,
       });
-      initialBoard.addPiece(new Bishop(Color.WHITE, false), {
+      initialBoard.addPiece(new Bishop(Color.WHITE, 0), {
         column: 2,
         row: 7,
       });
-      initialBoard.addPiece(new Bishop(Color.WHITE, false), {
+      initialBoard.addPiece(new Bishop(Color.WHITE, 0), {
         column: 5,
         row: 7,
       });
-      initialBoard.addPiece(new Queen(Color.BLACK, false), {
+      initialBoard.addPiece(new Queen(Color.BLACK, 0), {
         column: 3,
         row: 0,
       });
-      initialBoard.addPiece(new Queen(Color.WHITE, false), {
+      initialBoard.addPiece(new Queen(Color.WHITE, 0), {
         column: 3,
         row: 7,
       });
-      initialBoard.addPiece(new King(Color.BLACK, false), {
+      initialBoard.addPiece(new King(Color.BLACK, 0), {
         column: 4,
         row: 0,
       });
-      initialBoard.addPiece(new King(Color.WHITE, false), {
+      initialBoard.addPiece(new King(Color.WHITE, 0), {
         column: 4,
         row: 7,
       });

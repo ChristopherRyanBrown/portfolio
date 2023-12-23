@@ -8,8 +8,8 @@ import { Position } from "../../types/position";
 import { getDiagonalMoves } from "./util/get-diagonal-moves";
 
 export class Bishop extends BasePiece implements Piece {
-  constructor(color: Color, hasMoved: boolean) {
-    super(color, PieceType.BISHOP, hasMoved);
+  constructor(color: Color, numMoves: number) {
+    super(color, PieceType.BISHOP, numMoves);
   }
 
   public getAvailableMoves(
@@ -20,6 +20,6 @@ export class Bishop extends BasePiece implements Piece {
   }
 
   public clone<T extends BasePiece>(): T {
-    return new Bishop(this.color, this.hasMoved) as unknown as T;
+    return new Bishop(this.color, this.numMoves) as unknown as T;
   }
 }

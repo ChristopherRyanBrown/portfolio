@@ -7,8 +7,8 @@ import { Move } from "../../types/move";
 import { Position } from "../../types/position";
 
 export class Knight extends BasePiece implements Piece {
-  constructor(color: Color, hasMoved: boolean) {
-    super(color, PieceType.KNIGHT, hasMoved);
+  constructor(color: Color, numMoves: number) {
+    super(color, PieceType.KNIGHT, numMoves);
   }
 
   public getAvailableMoves(
@@ -39,6 +39,6 @@ export class Knight extends BasePiece implements Piece {
   }
 
   public clone<T extends BasePiece>(): T {
-    return new Knight(this.color, this.hasMoved) as unknown as T;
+    return new Knight(this.color, this.numMoves) as unknown as T;
   }
 }

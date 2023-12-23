@@ -98,7 +98,7 @@ export class Chessboard<T extends BasePiece> {
     const startIndex = this.superIndex(start);
     const endIndex = this.superIndex(end);
     const pieces = this.getPieces(color);
-    piece.hasMoved = true;
+    piece.numMoves++;
     pieces.set(endIndex, piece);
     pieces.delete(startIndex);
   }

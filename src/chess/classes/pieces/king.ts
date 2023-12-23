@@ -8,8 +8,8 @@ import { Position } from "../../types/position";
 import { SpecialtyMove } from "../../enums/specialty-move";
 
 export class King extends BasePiece implements Piece {
-  constructor(color: Color, hasMoved: boolean) {
-    super(color, PieceType.KING, hasMoved);
+  constructor(color: Color, numMoves: number) {
+    super(color, PieceType.KING, numMoves);
   }
 
   public getAvailableMoves(
@@ -35,9 +35,9 @@ export class King extends BasePiece implements Piece {
     const specialtyMoves = new Array<Move>();
 
     const king = chessboard.at(position);
-    if (!king?.hasMoved) {
+    if (!king?.numMoves) {
       const leftRook = chessboard.at({ column: 0, row });
-      if (leftRook && leftRook.type === PieceType.ROOK && !leftRook.hasMoved) {
+      if (leftRook && leftRook.type === PieceType.ROOK && !leftRook.numMoves) {
         if (![1, 2, 3].find((col) => chessboard.at({ column: col, row }))) {
           specialtyMoves.push({
             end: { column: column - 2, row },
@@ -50,7 +50,7 @@ export class King extends BasePiece implements Piece {
       if (
         rightRook &&
         rightRook.type === PieceType.ROOK &&
-        !rightRook.hasMoved
+        !rightRook.numMoves
       ) {
         if (![5, 6].find((col) => chessboard.at({ column: col, row }))) {
           specialtyMoves.push({
@@ -69,7 +69,7 @@ export class King extends BasePiece implements Piece {
   }
 
   public clone<T extends BasePiece>(): T {
-    return new King(this.color, this.hasMoved) as unknown as T;
+    return new King(this.color, this.numMoves) as unknown as T;
   }
 
   public specialtyMove(move: Move, chessboard: Chessboard<Piece>): void {

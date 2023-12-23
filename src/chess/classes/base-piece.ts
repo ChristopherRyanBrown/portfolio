@@ -4,12 +4,12 @@ import { PieceType } from "../enums/piece-type";
 export abstract class BasePiece {
   color: Color;
   type: PieceType;
-  hasMoved: boolean;
+  numMoves: number;
 
-  constructor(color: Color, type: PieceType, hasMoved: boolean) {
+  constructor(color: Color, type: PieceType, numMoves: number) {
     this.color = color;
     this.type = type;
-    this.hasMoved = hasMoved;
+    this.numMoves = numMoves;
   }
 
   abstract clone<T extends BasePiece>(): T;
