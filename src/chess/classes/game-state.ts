@@ -101,6 +101,7 @@ export class GameState {
 
     this.executeMove = this.executeMove.bind(this);
     this.isKingInCheck = this.isKingInCheck.bind(this);
+    this.getAllAvailableMoves = this.getAllAvailableMoves.bind(this);
   }
 
   public clone(): GameState {
@@ -126,6 +127,14 @@ export class GameState {
         const { color, type } = piece;
         return type === PieceType.KING && color === this.color;
       }
+    });
+  }
+
+  public getAllAvailableMoves(): Move[] {
+    return this.getAvailableMoves(this.color).filter((move) => {
+      const afterMove = this.executeMove(move);
+      afterMove.color = this.color;
+      return !afterMove.isKingInCheck();
     });
   }
 

@@ -5,20 +5,31 @@ import { Position } from "../types/position";
 import { Cell } from "./cell";
 
 export function ChessGame() {
-  const [{ board, color, executeMove, isKingInCheck }, setChessGame] = useState(
-    () => new GameState(),
-  );
+  const [
+    { board, color, executeMove, getAllAvailableMoves, isKingInCheck },
+    setChessGame,
+  ] = useState(() => new GameState());
   const [selectedCell, setSelectedCell] = useState<Position>();
 
   const isInCheck = useMemo(isKingInCheck, [isKingInCheck]);
+
+  const allAvailableMoves = useMemo(getAllAvailableMoves, [
+    getAllAvailableMoves,
+  ]);
+
+  useEffect(() => {
+    console.log({ allAvailableMoves });
+  }, [allAvailableMoves]);
 
   const availableMoves = useMemo(() => {
     if (!selectedCell) {
       return [];
     }
-    const piece = board.at(selectedCell);
-    return piece?.getAvailableMoves(selectedCell, board) ?? [];
-  }, [board, selectedCell]);
+    const { column, row } = selectedCell;
+    return allAvailableMoves.filter(
+      ({ start }) => start.column === column && start.row === row,
+    );
+  }, [allAvailableMoves, selectedCell]);
 
   const grid = useMemo(
     () =>
