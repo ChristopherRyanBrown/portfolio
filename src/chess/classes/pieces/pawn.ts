@@ -68,7 +68,9 @@ export class Pawn extends BasePiece implements Piece {
         (end: Position): Move => ({
           end,
           specialtyMoveType:
-            end.row === 0 || end.row === 7 ? SpecialtyMove.QUEEN : undefined,
+            end.row === 0 || end.row === 7
+              ? SpecialtyMove.PROMOTION
+              : undefined,
           start: position,
         }),
       ),
@@ -83,8 +85,8 @@ export class Pawn extends BasePiece implements Piece {
   public specialtyMove(move: Move, chessboard: Chessboard<Piece>): void {
     const { specialtyMoveType } = move;
     switch (specialtyMoveType) {
-      case SpecialtyMove.QUEEN:
-        this.queen(move, chessboard);
+      case SpecialtyMove.PROMOTION:
+        this.promote(move, chessboard);
         break;
       case SpecialtyMove.EN_PASSANT:
         this.enPassant(move, chessboard);
@@ -92,7 +94,7 @@ export class Pawn extends BasePiece implements Piece {
     }
   }
 
-  private queen({ end }: Move, chessboard: Chessboard<Piece>): void {
+  private promote({ end }: Move, chessboard: Chessboard<Piece>): void {
     chessboard.clearCell(end);
     chessboard.addPiece(new Queen(this.color, this.numMoves), end);
   }
