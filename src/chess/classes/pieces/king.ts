@@ -5,6 +5,7 @@ import { PieceType } from "../../enums/piece-type";
 import { Piece } from "../piece";
 import { Move } from "../../types/move";
 import { Position } from "../../types/position";
+import { SpecialtyMove } from "../../enums/specialty-move";
 
 export class King extends BasePiece implements Piece {
   constructor(color: Color, hasMoved: boolean) {
@@ -24,21 +25,67 @@ export class King extends BasePiece implements Piece {
           continue;
         }
         const newPosition: Position = { column: column + j, row: row + i };
-        if (chessboard.isPositionValid(newPosition)) {
-          const piece = chessboard.at(newPosition);
-          if (!piece || piece.color !== this.color) {
-            endPositions.push(newPosition);
-          }
+        const piece = chessboard.at(newPosition);
+        if (!piece || piece.color !== this.color) {
+          endPositions.push(newPosition);
         }
       }
     }
 
-    return endPositions.map(
-      (end: Position): Move => ({ end, start: position }),
-    );
+    const specialtyMoves = new Array<Move>();
+
+    const king = chessboard.at(position);
+    if (!king?.hasMoved) {
+      const leftRook = chessboard.at({ column: 0, row });
+      if (leftRook && leftRook.type === PieceType.ROOK && !leftRook.hasMoved) {
+        if (![1, 2, 3].find((col) => chessboard.at({ column: col, row }))) {
+          specialtyMoves.push({
+            end: { column: column - 2, row },
+            specialtyMoveType: SpecialtyMove.CASTLE,
+            start: position,
+          });
+        }
+      }
+      const rightRook = chessboard.at({ column: 7, row });
+      if (
+        rightRook &&
+        rightRook.type === PieceType.ROOK &&
+        !rightRook.hasMoved
+      ) {
+        if (![5, 6].find((col) => chessboard.at({ column: col, row }))) {
+          specialtyMoves.push({
+            end: { column: column + 2, row },
+            specialtyMoveType: SpecialtyMove.CASTLE,
+            start: position,
+          });
+        }
+      }
+    }
+
+    return [
+      ...endPositions.map((end: Position): Move => ({ end, start: position })),
+      ...specialtyMoves,
+    ].filter(({ end }) => chessboard.isPositionValid(end));
   }
 
   public clone<T extends BasePiece>(): T {
     return new King(this.color, this.hasMoved) as unknown as T;
+  }
+
+  public specialtyMove(move: Move, chessboard: Chessboard<Piece>): void {
+    const { specialtyMoveType } = move;
+    if (specialtyMoveType === SpecialtyMove.CASTLE) {
+      this.castle(move, chessboard);
+    }
+  }
+
+  private castle({ end }: Move, chessboard: Chessboard<Piece>): void {
+    const { column, row } = end;
+    const startColumn = column > 4 ? 7 : 0;
+    const endColumn = column > 4 ? column - 1 : column + 1;
+    chessboard.executeMove({
+      end: { column: endColumn, row },
+      start: { column: startColumn, row },
+    });
   }
 }
