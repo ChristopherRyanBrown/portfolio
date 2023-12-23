@@ -5,10 +5,12 @@ import { Position } from "../types/position";
 import { Cell } from "./cell";
 
 export function ChessGame() {
-  const [{ board, color, executeMove }, setChessGame] = useState(
+  const [{ board, color, executeMove, isKingInCheck }, setChessGame] = useState(
     () => new GameState(),
   );
   const [selectedCell, setSelectedCell] = useState<Position>();
+
+  const isInCheck = useMemo(isKingInCheck, [isKingInCheck]);
 
   const availableMoves = useMemo(() => {
     if (!selectedCell) {
@@ -34,22 +36,26 @@ export function ChessGame() {
 
   return (
     <Box display="flex" flexDirection="column">
-      {grid.map((columns, row) => (
-        <Box display="flex" flexDirection="row" key={row}>
-          {columns.map((piece, column) => (
-            <Cell
-              availableMoves={availableMoves}
-              color={(row + column) % 2 === 0 ? "tan" : "brown"}
-              currentPlayer={color}
-              piece={piece}
-              position={{ column, row }}
-              selectedCell={selectedCell}
-              onMove={(move) => setChessGame(executeMove(move))}
-              onSelect={setSelectedCell}
-            />
-          ))}
-        </Box>
-      ))}
+      {isInCheck && "Check"}
+      <Box display="flex" flexDirection="column">
+        {grid.map((columns, row) => (
+          <Box display="flex" flexDirection="row" key={row}>
+            {columns.map((piece, column) => (
+              <Cell
+                key={column}
+                availableMoves={availableMoves}
+                color={(row + column) % 2 === 0 ? "tan" : "brown"}
+                currentPlayer={color}
+                piece={piece}
+                position={{ column, row }}
+                selectedCell={selectedCell}
+                onMove={(move) => setChessGame(executeMove(move))}
+                onSelect={setSelectedCell}
+              />
+            ))}
+          </Box>
+        ))}
+      </Box>
     </Box>
   );
 }

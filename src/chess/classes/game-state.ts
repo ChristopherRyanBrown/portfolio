@@ -8,6 +8,7 @@ import { Rook } from "./pieces/rook";
 import { Bishop } from "./pieces/bishop";
 import { Queen } from "./pieces/queen";
 import { King } from "./pieces/king";
+import { PieceType } from "../enums/piece-type";
 
 export class GameState {
   board: Chessboard<Piece>;
@@ -99,22 +100,48 @@ export class GameState {
     }
 
     this.executeMove = this.executeMove.bind(this);
+    this.isKingInCheck = this.isKingInCheck.bind(this);
   }
 
-  clone(): GameState {
+  public clone(): GameState {
     return new GameState(this.board.clone(), this.color);
   }
 
-  executeMove(move: Move): GameState {
-    this.board.executeMove(move);
+  public executeMove(move: Move): GameState {
+    const board = this.board.clone();
+    board.executeMove(move);
     const { end, specialtyMoveType } = move;
-    const piece = this.board.at(end);
+    const piece = board.at(end);
     if (specialtyMoveType) {
-      piece?.specialtyMove?.(move, this.board);
+      piece?.specialtyMove?.(move, board);
     }
-    return new GameState(
-      this.board.clone(),
-      this.color === Color.BLACK ? Color.WHITE : Color.BLACK,
-    );
+    return new GameState(board, this.invertColor());
+  }
+
+  public isKingInCheck(): boolean {
+    const opponentMoves = this.getAvailableMoves(this.invertColor());
+    return !!opponentMoves.find(({ end }) => {
+      const piece = this.board.at(end);
+      if (piece) {
+        const { color, type } = piece;
+        return type === PieceType.KING && color === this.color;
+      }
+    });
+  }
+
+  private getAvailableMoves(color: Color): Move[] {
+    const pieces = this.board.getPieces(color);
+    let moves = new Array<Move>();
+    pieces.forEach((piece, index) => {
+      if (color === piece.color) {
+        const position = this.board.decompressSuperIndex(index);
+        moves = moves.concat(piece.getAvailableMoves(position, this.board));
+      }
+    });
+    return moves;
+  }
+
+  private invertColor(): Color {
+    return this.color === Color.BLACK ? Color.WHITE : Color.BLACK;
   }
 }
