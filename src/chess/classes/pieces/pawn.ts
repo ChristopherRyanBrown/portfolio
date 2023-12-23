@@ -42,16 +42,38 @@ export class Pawn extends BasePiece implements Piece {
         endPositions.push(forwardTwo);
       }
     }
-    return endPositions
-      .filter((position) => chessboard.isPositionValid(position))
-      .map(
+    const specialtyMoves = new Array<Move>();
+    if (row > 1 && row < 6) {
+      for (let i = -1; i <= 1; i += 2) {
+        piece = chessboard.at({ column: column + i, row });
+        if (piece) {
+          const { color, numMoves, type } = piece;
+          if (
+            color !== this.color &&
+            type === PieceType.PAWN &&
+            numMoves === 1
+          ) {
+            const end: Position = { column: column + i, row: endRow };
+            specialtyMoves.push({
+              end,
+              specialtyMoveType: SpecialtyMove.EN_PASSANT,
+              start: position,
+            });
+          }
+        }
+      }
+    }
+    return [
+      ...endPositions.map(
         (end: Position): Move => ({
           end,
           specialtyMoveType:
             end.row === 0 || end.row === 7 ? SpecialtyMove.QUEEN : undefined,
           start: position,
         }),
-      );
+      ),
+      ...specialtyMoves,
+    ].filter(({ end }) => chessboard.isPositionValid(end));
   }
 
   public clone<T extends BasePiece>(): T {
@@ -60,13 +82,24 @@ export class Pawn extends BasePiece implements Piece {
 
   public specialtyMove(move: Move, chessboard: Chessboard<Piece>): void {
     const { specialtyMoveType } = move;
-    if (specialtyMoveType === SpecialtyMove.QUEEN) {
-      this.queen(move, chessboard);
+    switch (specialtyMoveType) {
+      case SpecialtyMove.QUEEN:
+        this.queen(move, chessboard);
+        break;
+      case SpecialtyMove.EN_PASSANT:
+        this.enPassant(move, chessboard);
+        break;
     }
   }
 
   private queen({ end }: Move, chessboard: Chessboard<Piece>): void {
     chessboard.clearCell(end);
     chessboard.addPiece(new Queen(this.color, this.numMoves), end);
+  }
+
+  private enPassant({ end }: Move, chessboard: Chessboard<Piece>): void {
+    const { column, row } = end;
+    const enemyRow = row > 4 ? 4 : 3;
+    chessboard.clearCell({ column, row: enemyRow });
   }
 }
