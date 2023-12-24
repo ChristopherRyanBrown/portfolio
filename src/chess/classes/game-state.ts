@@ -9,6 +9,7 @@ import { Bishop } from "./pieces/bishop";
 import { Queen } from "./pieces/queen";
 import { King } from "./pieces/king";
 import { PieceType } from "../enums/piece-type";
+import { getHeuristic } from "./heuristic";
 
 export class GameState {
   board: Chessboard<Piece>;
@@ -150,7 +151,7 @@ export class GameState {
   private findOptimalMove(depth = 3): OptimalMove {
     const availableMoves = this.getAllAvailableMoves();
     if (!depth || !availableMoves.length) {
-      return { heuristic: availableMoves.length };
+      return { heuristic: getHeuristic(this.board, this.color) };
     }
     return availableMoves
       .map((move) => ({
