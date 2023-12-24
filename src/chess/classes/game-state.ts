@@ -149,17 +149,15 @@ export class GameState {
 
   private findOptimalMove(depth = 2): OptimalMove {
     const availableMoves = this.getAllAvailableMoves();
-    if (!depth) {
+    if (!depth || !availableMoves.length) {
       return { heuristic: availableMoves.length };
     }
-    const optimalMoves = availableMoves.map((move) => ({
-      heuristic: this.executeMove(move).findOptimalMove(depth - 1)?.heuristic,
-      move,
-    }));
-    if (!optimalMoves.length) {
-      return { heuristic: 0 };
-    }
-    return optimalMoves.reduce((a, b) => (a.heuristic < b.heuristic ? a : b));
+    return availableMoves
+      .map((move) => ({
+        heuristic: this.executeMove(move).findOptimalMove(depth - 1)?.heuristic,
+        move,
+      }))
+      .reduce((a, b) => (a.heuristic < b.heuristic ? a : b));
   }
 
   private getAvailableMoves(color: Color): Move[] {
