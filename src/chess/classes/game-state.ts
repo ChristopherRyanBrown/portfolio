@@ -102,6 +102,7 @@ export class GameState {
     this.executeMove = this.executeMove.bind(this);
     this.isKingInCheck = this.isKingInCheck.bind(this);
     this.getAllAvailableMoves = this.getAllAvailableMoves.bind(this);
+    this.executeOptimalMove = this.executeOptimalMove.bind(this);
   }
 
   public clone(): GameState {
@@ -138,6 +139,29 @@ export class GameState {
     });
   }
 
+  public executeOptimalMove(): GameState {
+    const move = this.findOptimalMove()?.move;
+    if (move) {
+      return this.executeMove(move);
+    }
+    return this.clone();
+  }
+
+  private findOptimalMove(depth = 2): OptimalMove {
+    const availableMoves = this.getAllAvailableMoves();
+    if (!depth) {
+      return { heuristic: availableMoves.length };
+    }
+    const optimalMoves = availableMoves.map((move) => ({
+      heuristic: this.executeMove(move).findOptimalMove(depth - 1)?.heuristic,
+      move,
+    }));
+    if (!optimalMoves.length) {
+      return { heuristic: 0 };
+    }
+    return optimalMoves.reduce((a, b) => (a.heuristic < b.heuristic ? a : b));
+  }
+
   private getAvailableMoves(color: Color): Move[] {
     const pieces = this.board.getPieces(color);
     let moves = new Array<Move>();
@@ -153,4 +177,9 @@ export class GameState {
   private invertColor(): Color {
     return this.color === Color.BLACK ? Color.WHITE : Color.BLACK;
   }
+}
+
+interface OptimalMove {
+  heuristic: number;
+  move?: Move;
 }

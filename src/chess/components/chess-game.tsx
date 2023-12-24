@@ -3,10 +3,18 @@ import { useEffect, useMemo, useState } from "react";
 import { GameState } from "../classes/game-state";
 import { Position } from "../types/position";
 import { Cell } from "./cell";
+import { Color } from "../enums/color";
 
 export function ChessGame() {
   const [
-    { board, color, executeMove, getAllAvailableMoves, isKingInCheck },
+    {
+      board,
+      color,
+      executeMove,
+      executeOptimalMove,
+      getAllAvailableMoves,
+      isKingInCheck,
+    },
     setChessGame,
   ] = useState(() => new GameState());
   const [selectedCell, setSelectedCell] = useState<Position>();
@@ -42,6 +50,12 @@ export function ChessGame() {
   useEffect(() => {
     setSelectedCell(undefined);
   }, [board]);
+
+  useEffect(() => {
+    if (color === Color.BLACK) {
+      setChessGame(executeOptimalMove());
+    }
+  }, [color, executeOptimalMove]);
 
   return (
     <Box display="flex" flexDirection="column">
