@@ -147,7 +147,7 @@ export class GameState {
     return this.clone();
   }
 
-  private findOptimalMove(depth = 2): OptimalMove {
+  private findOptimalMove(depth = 3): OptimalMove {
     const availableMoves = this.getAllAvailableMoves();
     if (!depth || !availableMoves.length) {
       return { heuristic: availableMoves.length };

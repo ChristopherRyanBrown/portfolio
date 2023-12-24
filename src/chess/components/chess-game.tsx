@@ -53,9 +53,9 @@ export function ChessGame() {
 
   useEffect(() => {
     if (color === Color.BLACK) {
-      setChessGame(executeOptimalMove());
+      setTimeout(() => setChessGame(executeOptimalMove()), 100);
     }
-  }, [color, executeOptimalMove]);
+  }, [color]);
 
   return (
     <Box display="flex" flexDirection="column">
