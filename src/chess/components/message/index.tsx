@@ -8,6 +8,7 @@ export function Message({ color, isCheckMate, isInCheck }: Props) {
       alignItems="center"
       color="gold"
       display="flex"
+      flexDirection="column"
       fontSize={40}
       height={640}
       justifyContent="center"
@@ -26,7 +27,14 @@ export function Message({ color, isCheckMate, isInCheck }: Props) {
           <Box>{color === Color.BLACK ? "Player 1 Wins" : "Player 2 Wins"}</Box>
         </Box>
       )}
-      {isInCheck && !isCheckMate && "Check"}
+      <Box
+        sx={{
+          opacity: isInCheck && !isCheckMate ? 1 : 0,
+          transition: "opacity 2s",
+        }}
+      >
+        Check
+      </Box>
     </Box>
   );
 }
