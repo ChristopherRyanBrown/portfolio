@@ -4,6 +4,7 @@ import { GameState } from "../classes/game-state";
 import { Position } from "../types/position";
 import { Cell } from "./cell";
 import { Color } from "../enums/color";
+import { Message } from "./message";
 
 export function ChessGame() {
   const [
@@ -58,27 +59,33 @@ export function ChessGame() {
   }, [color]);
 
   return (
-    <Box display="flex" flexDirection="column">
-      {isCheckMate && "Checkmate"}
-      {isInCheck && !isCheckMate && "Check"}
-      <Box display="flex" flexDirection="column">
-        {grid.map((columns, row) => (
-          <Box display="flex" flexDirection="row" key={row}>
-            {columns.map((piece, column) => (
-              <Cell
-                key={column}
-                availableMoves={availableMoves}
-                color={(row + column) % 2 === 0 ? "tan" : "brown"}
-                currentPlayer={color}
-                piece={piece}
-                position={{ column, row }}
-                selectedCell={selectedCell}
-                onMove={(move) => setChessGame(executeMove(move))}
-                onSelect={setSelectedCell}
-              />
-            ))}
-          </Box>
-        ))}
+    <Box alignItems="center" display="flex" flexDirection="column">
+      <Box>{color === Color.WHITE ? "Player 1" : "Player 2"}</Box>
+      <Box position="relative">
+        <Message
+          color={color}
+          isCheckMate={isCheckMate}
+          isInCheck={isInCheck}
+        />
+        <Box display="flex" flexDirection="column">
+          {grid.map((columns, row) => (
+            <Box display="flex" flexDirection="row" key={row}>
+              {columns.map((piece, column) => (
+                <Cell
+                  key={column}
+                  availableMoves={availableMoves}
+                  color={(row + column) % 2 === 0 ? "tan" : "brown"}
+                  currentPlayer={color}
+                  piece={piece}
+                  position={{ column, row }}
+                  selectedCell={selectedCell}
+                  onMove={(move) => setChessGame(executeMove(move))}
+                  onSelect={setSelectedCell}
+                />
+              ))}
+            </Box>
+          ))}
+        </Box>
       </Box>
     </Box>
   );
