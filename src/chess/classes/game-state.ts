@@ -154,10 +154,10 @@ export class GameState {
     return this.clone();
   }
 
-  private findOptimalScore(alphabeta: AlphaBeta, depth = 2): number {
+  private findOptimalScore(alphabeta: AlphaBeta, depth = 3): number {
     const availableMoves = this.getAllAvailableMoves();
     if (!depth || !availableMoves.length) {
-      return getHeuristic(this.board, this.color);
+      return getHeuristic(this.board, Color.WHITE);
     }
 
     const sortedStates = availableMoves
