@@ -1,25 +1,19 @@
 import { PieceType } from "../../enums/piece-type";
 import { Piece } from "../piece";
-import { bishopMapping } from "./bishop-mapping";
-import { kingMapping } from "./king-mapping";
-import { knightMapping } from "./knight-mapping";
-import { pawnMapping } from "./pawn-mapping";
-import { queenMapping } from "./queen-mapping";
-import { rookMapping } from "./rook-mapping";
 
 export function getMapping({ type }: Piece) {
   switch (type) {
     case PieceType.BISHOP:
-      return bishopMapping;
+      return 7000;
     case PieceType.KING:
-      return kingMapping;
+      return 10000;
     case PieceType.KNIGHT:
-      return knightMapping;
+      return 8000;
     case PieceType.PAWN:
-      return pawnMapping;
+      return 2000;
     case PieceType.QUEEN:
-      return queenMapping;
+      return 9000;
     case PieceType.ROOK:
-      return rookMapping;
+      return 7000;
   }
 }
