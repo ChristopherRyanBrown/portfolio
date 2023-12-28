@@ -161,38 +161,30 @@ export class GameState {
     }
 
     const sortedStates = availableMoves
-      .map((move) => ({ gameState: this.executeMove(move), move }))
-      .map(({ gameState, move }) => ({
+      .map((move) => this.executeMove(move))
+      .map((gameState) => ({
         gameState,
         rank: getHeuristic(gameState.board, gameState.color),
-        move,
       }))
       .sort((a, b) => a.rank - b.rank);
 
     let optimalValue = this.color === Color.BLACK ? Infinity : -Infinity;
-    let optimalMove = sortedStates[0]!.move;
 
     for (const state of sortedStates) {
-      const { gameState, move } = state;
+      const { gameState } = state;
       const heuristic = gameState.findOptimalScore(alphabeta, depth - 1);
       if (this.color === Color.BLACK) {
         optimalValue = Math.min(optimalValue, heuristic);
         if (optimalValue < alphabeta.alpha) {
-          break;
+          return optimalValue;
         }
-        if (optimalValue < alphabeta.beta) {
-          alphabeta.beta = optimalValue;
-          optimalMove = move;
-        }
+        alphabeta.beta = Math.min(alphabeta.beta, optimalValue);
       } else {
         optimalValue = Math.max(optimalValue, heuristic);
         if (optimalValue > alphabeta.beta) {
-          break;
+          return optimalValue;
         }
-        if (optimalValue > alphabeta.alpha) {
-          alphabeta.alpha = optimalValue;
-          optimalMove = move;
-        }
+        alphabeta.alpha = Math.max(alphabeta.alpha, optimalValue);
       }
     }
     return optimalValue;
