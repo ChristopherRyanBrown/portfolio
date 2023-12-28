@@ -159,7 +159,7 @@ export class GameState {
       .map((move) => ({ gameState: this.executeMove(move), move }))
       .map(({ gameState, move }) => ({
         gameState,
-        rank: getHeuristic(gameState.board, this.invertColor()),
+        rank: getHeuristic(gameState.board, gameState.color),
         move,
       }))
       .sort((a, b) => a.rank - b.rank);
