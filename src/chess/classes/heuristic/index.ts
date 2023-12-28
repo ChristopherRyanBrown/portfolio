@@ -15,6 +15,5 @@ export function getHeuristic(board: Chessboard<Piece>, color: Color): number {
     const mapping = getMapping(piece);
     sum -= mapping[Math.abs(row - 7)][column];
   });
-  const sign = color === Color.WHITE ? 1 : -1;
-  return sign * sum;
+  return sum;
 }

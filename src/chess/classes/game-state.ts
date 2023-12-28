@@ -158,7 +158,10 @@ export class GameState {
         heuristic: this.executeMove(move).findOptimalMove(depth - 1)?.heuristic,
         move,
       }))
-      .reduce((a, b) => (a.heuristic < b.heuristic ? a : b));
+      .reduce((a, b) => {
+        const [first, second] = this.color === Color.BLACK ? [a, b] : [b, a];
+        return first.heuristic < second.heuristic ? a : b;
+      });
   }
 
   private getAvailableMoves(color: Color): Move[] {
