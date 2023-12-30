@@ -154,7 +154,7 @@ export class GameState {
     return this.clone();
   }
 
-  private findOptimalScore(alphabeta: AlphaBeta, depth = 50): number {
+  private findOptimalScore(alphabeta: AlphaBeta, depth = 6): number {
     const availableMoves = this.getAllAvailableMoves();
     if (!depth || !availableMoves.length) {
       return getHeuristic(this.board, Color.WHITE);
@@ -174,7 +174,7 @@ export class GameState {
 
     for (const state of sortedStates) {
       const { gameState } = state;
-      if (alphabeta.beta <= alphabeta.alpha) {
+      if (alphabeta.beta < alphabeta.alpha) {
         break;
       }
       const heuristic = gameState.findOptimalScore(alphabeta, depth - 1);
