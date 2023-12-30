@@ -142,56 +142,51 @@ export class GameState {
   }
 
   public executeOptimalMove(): GameState {
-    const move = this.findOptimalMove(new AlphaBeta())?.move;
-    if (move) {
-      return this.executeMove(move);
+    const moves = this.getAllAvailableMoves().map((move) => ({
+      move,
+      score: this.executeMove(move).findOptimalScore(new AlphaBeta()),
+    }));
+    const optimalMove = moves.reduce((a, b) => (a.score < b.score ? a : b))
+      ?.move;
+    if (optimalMove) {
+      return this.executeMove(optimalMove);
     }
     return this.clone();
   }
 
-  private findOptimalMove(alphabeta: AlphaBeta, depth = 4): OptimalMove {
+  private findOptimalScore(alphabeta: AlphaBeta, depth = 50): number {
     const availableMoves = this.getAllAvailableMoves();
     if (!depth || !availableMoves.length) {
-      return { heuristic: getHeuristic(this.board, Color.WHITE) };
+      return getHeuristic(this.board, Color.WHITE);
     }
 
     const sortedStates = availableMoves
-      .map((move) => ({ gameState: this.executeMove(move), move }))
-      .map(({ gameState, move }) => ({
+      .map((move) => this.executeMove(move))
+      .map((gameState) => ({
         gameState,
-        move,
         rank: getHeuristic(gameState.board, gameState.color),
       }))
       .sort((a, b) => a.rank - b.rank);
 
-    let optimalValue = this.color === Color.BLACK ? Infinity : -Infinity;
-    let optimalMove = sortedStates[0]!.move;
+    const isMinimizing = this.color === Color.BLACK;
+
+    let optimalValue = isMinimizing ? Infinity : -Infinity;
 
     for (const state of sortedStates) {
-      const { gameState, move } = state;
-      const heuristic = gameState.findOptimalMove(alphabeta, depth - 1)
-        ?.heuristic;
-      if (this.color === Color.BLACK) {
+      const { gameState } = state;
+      if (alphabeta.beta <= alphabeta.alpha) {
+        break;
+      }
+      const heuristic = gameState.findOptimalScore(alphabeta, depth - 1);
+      if (isMinimizing) {
         optimalValue = Math.min(optimalValue, heuristic);
-        if (optimalValue < alphabeta.alpha) {
-          return { heuristic: optimalValue, move };
-        }
-        if (alphabeta.beta > optimalValue) {
-          alphabeta.beta = optimalValue;
-          optimalMove = move;
-        }
+        alphabeta.beta = Math.min(alphabeta.beta, optimalValue);
       } else {
         optimalValue = Math.max(optimalValue, heuristic);
-        if (optimalValue > alphabeta.beta) {
-          return { heuristic: optimalValue, move };
-        }
-        if (alphabeta.alpha < optimalValue) {
-          alphabeta.alpha = optimalValue;
-          optimalMove = move;
-        }
+        alphabeta.alpha = Math.max(alphabeta.alpha, optimalValue);
       }
     }
-    return { heuristic: optimalValue, move: optimalMove };
+    return optimalValue;
   }
 
   private getAvailableMoves(color: Color): Move[] {
