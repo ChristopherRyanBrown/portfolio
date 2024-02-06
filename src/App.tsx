@@ -1,7 +1,5 @@
+import { ChessGame } from "./chess";
+
 export function App() {
-  return (
-    <>
-      Work in Progress
-    </>
-  )
+  return <ChessGame />;
 }
